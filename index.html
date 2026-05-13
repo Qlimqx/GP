@@ -867,6 +867,9 @@ function renderClassements(resultats, qualifications, ecuries) {
 }
 
 function renderResultats(resultats, cfg) {
+  // Fonction conservée pour le podium uniquement
+  const container = document.getElementById('resultats-container');
+  if (!container) return; // Section supprimée, on skippe
   if (!resultats.length) {
     document.getElementById('resultats-container').innerHTML = '<p style="color:var(--muted);font-size:13px;">La course n\'a pas encore eu lieu — les résultats apparaîtront ici.</p>';
     document.getElementById('podium-section').style.display = 'none';
@@ -1027,7 +1030,6 @@ async function loadAll() {
     renderGrille(DEMO.pilotes);
     renderQualifications(DEMO.qualifications);
     renderClassements(DEMO.resultats, DEMO.qualifications, DEMO.ecuries);
-    renderResultats(DEMO.resultats, DEMO.config);
     renderPrimes(DEMO.config);
     renderReglement(DEMO.reglement);
     return;
@@ -1049,7 +1051,6 @@ async function loadAll() {
     renderGrille(pilotesRows);
     renderQualifications(qualiRows);
     renderClassements(resultatsRows, qualiRows, ecuriesRows);
-    renderResultats(resultatsRows, cfg);
     renderPrimes(cfg);
     renderReglement(reglementRows);
   } catch(err) {
@@ -1060,7 +1061,6 @@ async function loadAll() {
     renderGrille(DEMO.pilotes);
     renderQualifications(DEMO.qualifications);
     renderClassements(DEMO.resultats, DEMO.qualifications, DEMO.ecuries);
-    renderResultats(DEMO.resultats, DEMO.config);
     renderPrimes(DEMO.config);
     renderReglement(DEMO.reglement);
   }
