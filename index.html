@@ -227,6 +227,7 @@
     <nav>
       <a href="#inscription">Inscription</a>
       <a href="#grille">Grille</a>
+      <a href="#qualifications">Qualifs</a>
       <a href="#resultats">Résultats</a>
       <a href="#primes">Primes</a>
       <a href="#reglement">Règlement</a>
@@ -283,10 +284,21 @@
     </div>
   </section>
 
+  <!-- ── QUALIFICATIONS ── -->
+  <section class="section" id="qualifications">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Qualifications</h2>
+    </div>
+    <div id="quali-container">
+      <div class="loading"><div class="spinner"></div> Chargement des qualifications...</div>
+    </div>
+  </section>
+
   <!-- ── RÉSULTATS ── -->
   <section class="section" id="resultats">
     <div class="section-header">
-      <span class="section-num">03</span>
+      <span class="section-num">04</span>
       <h2 class="section-title">Résultats</h2>
     </div>
     <div id="resultats-container">
@@ -308,7 +320,7 @@
   <!-- ── RÈGLEMENT ── -->
   <section class="section" id="reglement">
     <div class="section-header">
-      <span class="section-num">05</span>
+      <span class="section-num">06</span>
       <h2 class="section-title">Règlement</h2>
     </div>
     <div class="rule"><strong>Art. 1 — Inscription :</strong> Le frais d'inscription est dû avant le début des qualifications. Sans paiement validé, le pilote n'est pas admis sur la grille.</div>
@@ -348,9 +360,10 @@ const SHEET_ID    = 'YOUR_SHEET_ID'; // Ton ID Google Sheets
 const PNL_PASSWORD = 'gp2024';        // Mot de passe section finances
 
 const TABS = {
-  config:   { name: 'CONFIG',   range: 'A3:C100' },
-  pilotes:  { name: 'PILOTES',  range: 'A3:F100' },
-  resultats:{ name: 'RESULTATS',range: 'A3:F100' }
+  config:        { name: 'CONFIG',         range: 'A3:C100' },
+  pilotes:       { name: 'PILOTES',        range: 'A3:F100' },
+  qualifications:{ name: 'QUALIFICATIONS', range: 'A4:H100' },
+  resultats:     { name: 'RESULTATS',      range: 'A3:F100' }
 };
 
 // ============================================================
@@ -375,6 +388,12 @@ const DEMO = {
     { Numero:'07', Pilote:'Sofia Reyes',  Ecurie:'Vinewood Motorsport',Statut:'Confirmé' },
     { Numero:'11', Pilote:'Karim Osei',   Ecurie:'Blaine County Speed',Statut:'Confirmé' },
     { Numero:'44', Pilote:'Nico Lambert', Ecurie:'Del Perro Racing',   Statut:'Confirmé' },
+  ],
+  qualifications: [
+    { 'Pos. Grille':'1', Pilote:'Jean Dupont',  Ecurie:'Los Santos Racing',   Q1:'1:23.456', Q2:'1:22.891', Q3:'1:22.123', 'Meilleur Temps':'1:22.123', Note:'POLE' },
+    { 'Pos. Grille':'2', Pilote:'Sofia Reyes',  Ecurie:'Vinewood Motorsport', Q1:'1:23.780', Q2:'1:23.201', Q3:'1:22.456', 'Meilleur Temps':'1:22.456', Note:'' },
+    { 'Pos. Grille':'3', Pilote:'Karim Osei',   Ecurie:'Blaine County Speed', Q1:'1:24.012', Q2:'1:23.456', Q3:'1:23.001', 'Meilleur Temps':'1:23.001', Note:'' },
+    { 'Pos. Grille':'4', Pilote:'Nico Lambert',  Ecurie:'Del Perro Racing',   Q1:'1:24.234', Q2:'1:23.789', Q3:'1:23.345', 'Meilleur Temps':'1:23.345', Note:'' },
   ],
   resultats: []
 };
@@ -514,6 +533,55 @@ function renderGrille(pilotes) {
         <tbody>${rows}</tbody>
       </table>
     </div>`;
+}
+
+
+function renderQualifications(quals) {
+  if (!quals.length) {
+    document.getElementById('quali-container').innerHTML =
+      '<p style="color:var(--muted);font-size:13px;">Les qualifications n\'ont pas encore eu lieu.</p>';
+    return;
+  }
+
+  const rows = quals.map((q, i) => {
+    const pos   = q['Pos. Grille'] || q['pos. grille'] || q['Position'] || `${i+1}`;
+    const nom   = q['Pilote']  || q['pilote']  || '—';
+    const ecurie= q['Ecurie']  || q['ecurie']  || '—';
+    const q1    = q['Q1'] || q['q1'] || '';
+    const q2    = q['Q2'] || q['q2'] || '';
+    const q3    = q['Q3'] || q['q3'] || '';
+    const best  = q['Meilleur Temps'] || q['meilleur temps'] || q['MeilleursTemps'] || q1 || '';
+    const note  = q['Note'] || q['note'] || '';
+    const p = parseInt(pos);
+    const posCls = p===1?'pos-1':p===2?'pos-2':p===3?'pos-3':'pos-n';
+    const isPole = note.toUpperCase().includes('POLE') || p===1;
+
+    return `<tr>
+      <td><span class="pos-badge ${posCls}">${pos}</span></td>
+      <td class="grid-name">${nom}${isPole ? ' <span class="badge b-gold" style="font-size:9px;">POLE</span>' : ''}</td>
+      <td>${ecurie}</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--muted);">${q1}</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--muted);">${q2}</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--muted);">${q3}</td>
+      <td style="font-family:monospace;font-weight:700;color:var(--gold);font-size:12px;">${best}</td>
+      <td style="font-size:11px;color:var(--dim);">${note === 'POLE' ? '' : note}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('quali-container').innerHTML = `
+    <div style="overflow-x:auto;">
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th>Grille</th><th>Pilote</th><th>Écurie</th>
+            <th>Q1</th><th>Q2</th><th>Q3</th>
+            <th style="color:var(--gold);">Meilleur</th><th>Note</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="info">La position sur la grille de départ est déterminée par le meilleur temps en qualification. <strong>Q1</strong> = tous les pilotes · <strong>Q2</strong> = top 10 · <strong>Q3</strong> = top 6 (pole position).</div>`;
 }
 
 function renderResultats(resultats, cfg) {
@@ -674,21 +742,24 @@ async function loadAll() {
     renderConfig(DEMO.config);
     renderInscription(DEMO.config);
     renderGrille(DEMO.pilotes);
+    renderQualifications(DEMO.qualifications);
     renderResultats(DEMO.resultats, DEMO.config);
     renderPrimes(DEMO.config);
     return;
   }
 
   try {
-    const [configRows, pilotesRows, resultatsRows] = await Promise.all([
+    const [configRows, pilotesRows, qualiRows, resultatsRows] = await Promise.all([
       fetchSheet(TABS.config),
       fetchSheet(TABS.pilotes),
+      fetchSheet(TABS.qualifications),
       fetchSheet(TABS.resultats)
     ]);
     const cfg = parseConfig(configRows);
     renderConfig(cfg);
     renderInscription(cfg);
     renderGrille(pilotesRows);
+    renderQualifications(qualiRows);
     renderResultats(resultatsRows, cfg);
     renderPrimes(cfg);
   } catch(err) {
@@ -696,6 +767,7 @@ async function loadAll() {
     renderConfig(DEMO.config);
     renderInscription(DEMO.config);
     renderGrille(DEMO.pilotes);
+    renderQualifications(DEMO.qualifications);
     renderResultats(DEMO.resultats, DEMO.config);
     renderPrimes(DEMO.config);
   }
