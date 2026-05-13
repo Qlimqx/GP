@@ -226,6 +226,7 @@
     </a>
     <nav>
       <a href="#inscription">Inscription</a>
+      <a href="#ecuries">Écuries</a>
       <a href="#grille">Grille</a>
       <a href="#qualifications">Qualifs</a>
       <a href="#resultats">Résultats</a>
@@ -273,10 +274,21 @@
     </div>
   </section>
 
+  <!-- ── ÉCURIES ── -->
+  <section class="section" id="ecuries">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Écuries</h2>
+    </div>
+    <div id="ecuries-container">
+      <div class="loading"><div class="spinner"></div> Chargement des écuries...</div>
+    </div>
+  </section>
+
   <!-- ── GRILLE DE DÉPART ── -->
   <section class="section" id="grille">
     <div class="section-header">
-      <span class="section-num">02</span>
+      <span class="section-num">03</span>
       <h2 class="section-title">Grille de départ</h2>
     </div>
     <div id="grille-container">
@@ -287,7 +299,7 @@
   <!-- ── QUALIFICATIONS ── -->
   <section class="section" id="qualifications">
     <div class="section-header">
-      <span class="section-num">03</span>
+      <span class="section-num">04</span>
       <h2 class="section-title">Qualifications</h2>
     </div>
     <div id="quali-container">
@@ -298,7 +310,7 @@
   <!-- ── RÉSULTATS ── -->
   <section class="section" id="resultats">
     <div class="section-header">
-      <span class="section-num">04</span>
+      <span class="section-num">05</span>
       <h2 class="section-title">Résultats</h2>
     </div>
     <div id="resultats-container">
@@ -317,18 +329,15 @@
     </div>
   </section>
 
-  <!-- ── RÈGLEMENT ── -->
+  <!-- ── RÈGLEMENT (dynamique depuis Google Sheets) ── -->
   <section class="section" id="reglement">
     <div class="section-header">
-      <span class="section-num">06</span>
+      <span class="section-num">07</span>
       <h2 class="section-title">Règlement</h2>
     </div>
-    <div class="rule"><strong>Art. 1 — Inscription :</strong> Le frais d'inscription est dû avant le début des qualifications. Sans paiement validé, le pilote n'est pas admis sur la grille.</div>
-    <div class="rule"><strong>Art. 2 — Composition :</strong> Chaque écurie aligne 2 pilotes maximum. Un pilote peut courir en indépendant.</div>
-    <div class="rule"><strong>Art. 3 — Qualifications :</strong> La grille de départ est déterminée par les temps de qualification. La pole position offre un bonus de départ.</div>
-    <div class="rule"><strong>Art. 4 — Gains :</strong> Les primes sont versées lors de la cérémonie officielle après la course, sous validation des commissaires.</div>
-    <div class="rule"><strong>Art. 5 — Fair-play :</strong> Toute collision intentionnelle ou triche entraîne une disqualification immédiate et la perte de la prime. Pas de remboursement de l'inscription.</div>
-    <div class="rule"><strong>Art. 6 — Litiges :</strong> Toute contestation doit être déposée dans l'heure suivant la course. Frais de dossier : $50 000.</div>
+    <div id="reglement-container">
+      <div class="loading"><div class="spinner"></div> Chargement du règlement...</div>
+    </div>
   </section>
 
 </main>
@@ -356,14 +365,16 @@
 // ============================================================
 // ★ CONFIGURATION — MODIFIE CES 2 LIGNES ★
 // ============================================================
-const SHEET_ID    = '1szraEMD0t09bABhMD4H5gVgzTqeOSy_ftLGkzELfYbQ'; // Ton ID Google Sheets
-const PNL_PASSWORD = 'gp2026';        // Mot de passe section finances
+const SHEET_ID    = '1GmOrWSLecNuF5z7VEYo92XUJHBzfQW4Siih6Tj4cZx4'; // Ton ID Google Sheets
+const PNL_PASSWORD = 'gp2024';        // Mot de passe section finances
 
 const TABS = {
   config:        { name: 'CONFIG',         range: 'A3:C100' },
   pilotes:       { name: 'PILOTES',        range: 'A3:F100' },
+  ecuries:       { name: 'ECURIES',        range: 'A3:F100' },
   qualifications:{ name: 'QUALIFICATIONS', range: 'A4:H100' },
-  resultats:     { name: 'RESULTATS',      range: 'A3:F100' }
+  resultats:     { name: 'RESULTATS',      range: 'A3:F100' },
+  reglement:     { name: 'REGLEMENT',      range: 'A3:C100' }
 };
 
 // ============================================================
@@ -388,6 +399,20 @@ const DEMO = {
     { Numero:'07', Pilote:'Sofia Reyes',  Ecurie:'Vinewood Motorsport',Statut:'Confirmé' },
     { Numero:'11', Pilote:'Karim Osei',   Ecurie:'Blaine County Speed',Statut:'Confirmé' },
     { Numero:'44', Pilote:'Nico Lambert', Ecurie:'Del Perro Racing',   Statut:'Confirmé' },
+  ],
+  ecuries: [
+    { Ecurie:'Los Santos Racing',   Pilote1:'Jean Dupont',  Pilote2:'Marc Leroy',   Couleur:'#F0A500', Sponsor:'', Statut:'Inscrite'   },
+    { Ecurie:'Vinewood Motorsport', Pilote1:'Sofia Reyes',  Pilote2:'Nico Lambert', Couleur:'#3B8BFA', Sponsor:'', Statut:'Inscrite'   },
+    { Ecurie:'Blaine County Speed', Pilote1:'Karim Osei',   Pilote2:'Tom Castillo', Couleur:'#2ECC71', Sponsor:'', Statut:'Inscrite'   },
+    { Ecurie:'Del Perro Racing',    Pilote1:'Dana Park',    Pilote2:'Luis Ortega',  Couleur:'#E74C3C', Sponsor:'', Statut:'En attente' },
+  ],
+  reglement: [
+    { Article:'Art. 1', Titre:'Inscription',    Texte:"Le frais d'inscription est dû avant le début des qualifications." },
+    { Article:'Art. 2', Titre:'Composition',    Texte:'Chaque écurie aligne 2 pilotes maximum. Un pilote peut courir en indépendant.' },
+    { Article:'Art. 3', Titre:'Qualifications', Texte:'La grille de départ est déterminée par les temps de qualification. Q1 = tous, Q2 = top 10, Q3 = top 6.' },
+    { Article:'Art. 4', Titre:'Gains',          Texte:'Les primes sont versées lors de la cérémonie officielle après la course.' },
+    { Article:'Art. 5', Titre:'Fair-play',      Texte:'Toute collision intentionnelle entraîne une disqualification immédiate.' },
+    { Article:'Art. 6', Titre:'Litiges',        Texte:'Toute contestation doit être déposée dans l'heure suivant la course. Frais : $50 000.' },
   ],
   qualifications: [
     { 'Pos. Grille':'1', Pilote:'Jean Dupont',  Ecurie:'Los Santos Racing',   Q1:'1:23.456', Q2:'1:22.891', Q3:'1:22.123', 'Meilleur Temps':'1:22.123', Note:'POLE' },
@@ -535,6 +560,59 @@ function renderGrille(pilotes) {
     </div>`;
 }
 
+
+
+function renderEcuries(ecuries) {
+  const valid = ecuries.filter(e => (e['Ecurie'] || e['ecurie'] || '').trim());
+  if (!valid.length) {
+    document.getElementById('ecuries-container').innerHTML =
+      '<p style="color:var(--muted);font-size:13px;">Aucune écurie inscrite pour le moment.</p>';
+    return;
+  }
+  const cards = valid.map(e => {
+    const nom    = e['Ecurie']  || e['ecurie']  || '—';
+    const p1     = e['Pilote1'] || e['pilote1'] || '';
+    const p2     = e['Pilote2'] || e['pilote2'] || '';
+    const color  = e['Couleur'] || e['couleur'] || '#F0A500';
+    const sponsor= e['Sponsor'] || e['sponsor'] || '';
+    const statut = e['Statut']  || e['statut']  || '';
+    const sl = statut.toLowerCase();
+    const sbadge = sl.includes('inscrit') ? `<span class="badge b-green">${statut}</span>`
+                 : sl.includes('attente') ? `<span class="badge b-gold">${statut}</span>`
+                 : sl.includes('forfait') ? `<span class="badge b-red">${statut}</span>`
+                 : statut ? `<span class="badge b-blue">${statut}</span>` : '';
+    const pilotes = [p1,p2].filter(Boolean);
+    return `<div class="ecurie-card" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;transition:border-color 0.2s;">
+      <div style="width:40px;height:40px;border-radius:50%;border:2px solid ${color};background:${color}18;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;color:${color};flex-shrink:0;">${nom.substring(0,2).toUpperCase()}</div>
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:14px;color:var(--text);margin-bottom:4px;">${nom}</div>
+        <div style="font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          ${pilotes.length ? `<span>🏎 ${pilotes.join(' · ')}</span>` : ''}
+          ${sponsor ? `<span style="color:var(--gold)">◆ ${sponsor}</span>` : ''}
+          ${sbadge}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('ecuries-container').innerHTML =
+    `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:0.875rem;">${cards}</div>`;
+}
+
+function renderReglement(articles) {
+  if (!articles.length) {
+    document.getElementById('reglement-container').innerHTML =
+      '<p style="color:var(--muted);font-size:13px;">Règlement non disponible.</p>';
+    return;
+  }
+  const valid = articles.filter(a => (a['Article'] || a['article'] || '').trim());
+  const html = valid.map(a => {
+    const art   = a['Article'] || a['article'] || '';
+    const titre = a['Titre']   || a['titre']   || '';
+    const texte = a['Texte']   || a['texte']   || '';
+    return `<div class="rule"><strong>${art} — ${titre} :</strong> ${texte}</div>`;
+  }).join('');
+  document.getElementById('reglement-container').innerHTML = html;
+}
 
 function renderQualifications(quals) {
   if (!quals.length) {
@@ -741,35 +819,43 @@ async function loadAll() {
   if (!isConfigured) {
     renderConfig(DEMO.config);
     renderInscription(DEMO.config);
+    renderEcuries(DEMO.ecuries);
     renderGrille(DEMO.pilotes);
     renderQualifications(DEMO.qualifications);
     renderResultats(DEMO.resultats, DEMO.config);
     renderPrimes(DEMO.config);
+    renderReglement(DEMO.reglement);
     return;
   }
 
   try {
-    const [configRows, pilotesRows, qualiRows, resultatsRows] = await Promise.all([
+    const [configRows, pilotesRows, ecuriesRows, qualiRows, resultatsRows, reglementRows] = await Promise.all([
       fetchSheet(TABS.config),
       fetchSheet(TABS.pilotes),
+      fetchSheet(TABS.ecuries),
       fetchSheet(TABS.qualifications),
-      fetchSheet(TABS.resultats)
+      fetchSheet(TABS.resultats),
+      fetchSheet(TABS.reglement)
     ]);
     const cfg = parseConfig(configRows);
     renderConfig(cfg);
     renderInscription(cfg);
+    renderEcuries(ecuriesRows);
     renderGrille(pilotesRows);
     renderQualifications(qualiRows);
     renderResultats(resultatsRows, cfg);
     renderPrimes(cfg);
+    renderReglement(reglementRows);
   } catch(err) {
     console.error('[GP] Erreur:', err);
     renderConfig(DEMO.config);
     renderInscription(DEMO.config);
+    renderEcuries(DEMO.ecuries);
     renderGrille(DEMO.pilotes);
     renderQualifications(DEMO.qualifications);
     renderResultats(DEMO.resultats, DEMO.config);
     renderPrimes(DEMO.config);
+    renderReglement(DEMO.reglement);
   }
 }
 
