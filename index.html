@@ -211,6 +211,60 @@
       main { padding: 2rem 1rem 4rem; }
       .podium-block { width: 120px; }
     }
+
+    /* ── CLASSEMENT ÉCURIES ── */
+    .ecurie-rank-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: border-color 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .ecurie-rank-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+    }
+    .ecurie-rank-card:hover { transform: translateX(4px); }
+    .ecurie-rank-card.rank-1 { border-color: var(--gold-border); background: rgba(240,165,0,0.04); }
+    .ecurie-rank-card.rank-1::before { background: var(--gold); }
+    .ecurie-rank-card.rank-2::before { background: var(--silver); }
+    .ecurie-rank-card.rank-3::before { background: var(--bronze); }
+    .rank-num { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 2rem; min-width: 36px; text-align: center; line-height: 1; }
+    .rank-1 .rank-num { color: var(--gold); }
+    .rank-2 .rank-num { color: var(--silver); }
+    .rank-3 .rank-num { color: var(--bronze); }
+    .rank-other .rank-num { color: var(--dim); }
+    .rank-ecurie-badge { width: 44px; height: 44px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+    .rank-info { flex: 1; }
+    .rank-name { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text); margin-bottom: 4px; }
+    .rank-pilots { font-size: 12px; color: var(--muted); }
+    .rank-pts-wrap { text-align: right; }
+    .rank-pts { font-family: 'Barlow Condensed', sans-serif; font-size: 2rem; font-weight: 900; line-height: 1; }
+    .rank-1 .rank-pts { color: var(--gold); }
+    .rank-2 .rank-pts { color: var(--silver); }
+    .rank-3 .rank-pts { color: var(--bronze); }
+    .rank-other .rank-pts { color: var(--text); }
+    .rank-pts-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+    .rank-prize { font-size: 12px; color: var(--green); font-weight: 600; margin-top: 2px; }
+    .pts-breakdown { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+    .pts-chip { font-size: 10px; padding: 1px 6px; border-radius: 3px; background: var(--surface2); color: var(--muted); }
+    .pts-chip.bonus { background: rgba(240,165,0,0.1); color: var(--gold); }
+
+    /* ── CLASSEMENT PILOTES (secondaire) ── */
+    .pilots-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .pilots-table th { text-align: left; padding: 8px 10px; font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--dim); border-bottom: 1px solid var(--border); }
+    .pilots-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--muted); }
+    .pilots-table tr:last-child td { border-bottom: none; }
+    .pilots-table tr:hover td { background: var(--surface2); }
+
   </style>
 </head>
 <body>
@@ -229,7 +283,8 @@
       <a href="#ecuries">Écuries</a>
       <a href="#grille">Grille</a>
       <a href="#qualifications">Qualifs</a>
-      <a href="#resultats">Résultats</a>
+      <a href="#classement-ecuries">Écuries</a>
+      <a href="#classement-pilotes">Pilotes</a>
       <a href="#primes">Primes</a>
       <a href="#reglement">Règlement</a>
     </nav>
@@ -307,14 +362,25 @@
     </div>
   </section>
 
-  <!-- ── RÉSULTATS ── -->
-  <section class="section" id="resultats">
+  <!-- ── CLASSEMENT ÉCURIES (principal) ── -->
+  <section class="section" id="classement-ecuries">
     <div class="section-header">
       <span class="section-num">05</span>
-      <h2 class="section-title">Résultats</h2>
+      <h2 class="section-title">Classement Écuries</h2>
     </div>
-    <div id="resultats-container">
-      <div class="loading"><div class="spinner"></div> Chargement des résultats...</div>
+    <div id="classement-ecuries-container">
+      <div class="loading"><div class="spinner"></div> Calcul du classement...</div>
+    </div>
+  </section>
+
+  <!-- ── CLASSEMENT PILOTES (secondaire) ── -->
+  <section class="section" id="classement-pilotes">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Classement Pilotes</h2>
+    </div>
+    <div id="classement-pilotes-container">
+      <div class="loading"><div class="spinner"></div> Chargement...</div>
     </div>
   </section>
 
@@ -332,7 +398,7 @@
   <!-- ── RÈGLEMENT (dynamique depuis Google Sheets) ── -->
   <section class="section" id="reglement">
     <div class="section-header">
-      <span class="section-num">07</span>
+      <span class="section-num">08</span>
       <h2 class="section-title">Règlement</h2>
     </div>
     <div id="reglement-container">
@@ -365,8 +431,15 @@
 // ============================================================
 // ★ CONFIGURATION — MODIFIE CES 2 LIGNES ★
 // ============================================================
-const SHEET_ID    = '1GmOrWSLecNuF5z7VEYo92XUJHBzfQW4Siih6Tj4cZx4'; // Ton ID Google Sheets
-const PNL_PASSWORD = 'gp2026';        // Mot de passe section finances
+const SHEET_ID    = 'YOUR_SHEET_ID'; // Ton ID Google Sheets
+const PNL_PASSWORD = 'gp2024';        // Mot de passe section finances
+
+// ============================================================
+// SYSTÈME DE POINTS — Modifie ici le barème
+// ============================================================
+const POINTS_GP = { 1:25, 2:18, 3:15, 4:12, 5:10, 6:8, 7:6, 8:4, 9:2, 10:1 };
+const BONUS_POLE = 3;   // Points bonus pole position
+const BONUS_MTC  = 2;   // Points bonus meilleur tour en course
 
 const TABS = {
   config:        { name: 'CONFIG',         range: 'A3:C100' },
@@ -420,7 +493,14 @@ const DEMO = {
     { 'Pos. Grille':'3', Pilote:'Karim Osei',   Ecurie:'Blaine County Speed', Q1:'1:24.012', Q2:'1:23.456', Q3:'1:23.001', 'Meilleur Temps':'1:23.001', Note:'' },
     { 'Pos. Grille':'4', Pilote:'Nico Lambert',  Ecurie:'Del Perro Racing',   Q1:'1:24.234', Q2:'1:23.789', Q3:'1:23.345', 'Meilleur Temps':'1:23.345', Note:'' },
   ],
-  resultats: []
+  resultats: [
+    { Position:'1', Pilote:'Jean Dupont',  Ecurie:'Los Santos Racing',   'Temps / Écart':'1:23:45.123', Note:'' },
+    { Position:'2', Pilote:'Sofia Reyes',  Ecurie:'Vinewood Motorsport', 'Temps / Écart':'+12.456s',    Note:'MTC' },
+    { Position:'3', Pilote:'Karim Osei',   Ecurie:'Blaine County Speed', 'Temps / Écart':'+28.901s',    Note:'' },
+    { Position:'4', Pilote:'Nico Lambert', Ecurie:'Del Perro Racing',    'Temps / Écart':'+1 Tour',     Note:'' },
+    { Position:'5', Pilote:'Tom Castillo', Ecurie:'Blaine County Speed', 'Temps / Écart':'+1 Tour',     Note:'' },
+    { Position:'6', Pilote:'Dana Park',    Ecurie:'Del Perro Racing',    'Temps / Écart':'Abandon',     Note:'Panne moteur' },
+  ]
 };
 
 // ============================================================
@@ -662,6 +742,130 @@ function renderQualifications(quals) {
     <div class="info">La position sur la grille de départ est déterminée par le meilleur temps en qualification. <strong>Q1</strong> = tous les pilotes · <strong>Q2</strong> = top 10 · <strong>Q3</strong> = top 6 (pole position).</div>`;
 }
 
+
+function getGpPoints(pos) {
+  const p = parseInt(pos);
+  return POINTS_GP[p] || 0;
+}
+
+function renderClassements(resultats, qualifications, ecuries) {
+  if (!resultats.length) {
+    document.getElementById('classement-ecuries-container').innerHTML =
+      '<p style="color:var(--muted);font-size:13px;">La course n\'a pas encore eu lieu — le classement apparaîtra ici.</p>';
+    document.getElementById('classement-pilotes-container').innerHTML =
+      '<p style="color:var(--muted);font-size:13px;">En attente des résultats.</p>';
+    return;
+  }
+
+  // Trouver le pilote pole et MTC depuis qualifications/resultats
+  const poleNote = qualifications.find(q => (q['Note']||'').toUpperCase().includes('POLE'));
+  const polePilote = poleNote ? (poleNote['Pilote']||poleNote['pilote']||'') : '';
+  const mtcRow = resultats.find(r => (r['Note']||r['note']||'').toUpperCase().includes('MTC') || (r['Note']||r['note']||'').toUpperCase().includes('MEILLEUR TOUR'));
+  const mtcPilote = mtcRow ? (mtcRow['Pilote']||mtcRow['pilote']||'') : '';
+
+  // Map pilote → écurie depuis ECURIES ou RESULTATS
+  const piloteToEcurie = {};
+  ecuries.forEach(e => {
+    const nom = e['Ecurie']||e['ecurie']||'';
+    const p1  = e['Pilote1']||e['pilote1']||'';
+    const p2  = e['Pilote2']||e['pilote2']||'';
+    if (p1) piloteToEcurie[p1] = nom;
+    if (p2) piloteToEcurie[p2] = nom;
+  });
+
+  // Calcul points pilotes
+  const pilotesData = resultats
+    .filter(r => (r['Pilote']||r['pilote']||r['Position']||'').trim())
+    .map(r => {
+      const nom    = r['Pilote']   || r['pilote']   || '—';
+      const pos    = r['Position'] || r['position'] || '';
+      const ecurie = r['Ecurie']   || r['ecurie']   || piloteToEcurie[nom] || '—';
+      const temps  = r['Temps / Écart'] || r['Temps'] || r['temps'] || '—';
+      let pts = getGpPoints(pos);
+      const bonuses = [];
+      if (nom === polePilote && BONUS_POLE > 0) { pts += BONUS_POLE; bonuses.push(`+${BONUS_POLE}pts pôle`); }
+      if (nom === mtcPilote  && BONUS_MTC  > 0) { pts += BONUS_MTC;  bonuses.push(`+${BONUS_MTC}pts MTC`); }
+      return { nom, pos: parseInt(pos)||99, ecurie, temps, pts, bonuses };
+    })
+    .sort((a,b) => a.pos - b.pos);
+
+  // Calcul points écuries
+  const ecuriesMap = {};
+  pilotesData.forEach(p => {
+    const eq = p.ecurie;
+    if (!ecuriesMap[eq]) ecuriesMap[eq] = { nom: eq, pts: 0, pilotes: [], color: '#F0A500' };
+    ecuriesMap[eq].pts += p.pts;
+    ecuriesMap[eq].pilotes.push(p);
+  });
+  // Ajouter couleur depuis ECURIES
+  ecuries.forEach(e => {
+    const nom = e['Ecurie']||e['ecurie']||'';
+    if (ecuriesMap[nom]) ecuriesMap[nom].color = e['Couleur']||e['couleur']||'#F0A500';
+  });
+
+  const ecuriesSorted = Object.values(ecuriesMap).sort((a,b) => b.pts - a.pts);
+
+  // ── Rendu classement écuries ──
+  const rankCls = ['rank-1','rank-2','rank-3'];
+  const rankEmoji = ['🏆','🥈','🥉'];
+
+  const ecuriesHtml = ecuriesSorted.map((e, i) => {
+    const cls = rankCls[i] || 'rank-other';
+    const color = e.color;
+    const initials = e.nom.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const pilotesStr = e.pilotes.map(p => `${p.nom} (${p.pos === 99 ? '—' : p.pos+'e'})`).join(' · ');
+    const ptsByPilot = e.pilotes.map(p => {
+      const base = getGpPoints(p.pos);
+      const bonus = p.bonuses.length ? ` <span class="pts-chip bonus">${p.bonuses.join(' ')}</span>` : '';
+      return `<span class="pts-chip">${p.nom.split(' ')[0]}: ${base}pts</span>${bonus}`;
+    }).join('');
+
+    return `<div class="ecurie-rank-card ${cls}">
+      <div class="rank-num">${rankEmoji[i]||i+1}</div>
+      <div class="rank-ecurie-badge" style="color:${color};border-color:${color};background:${color}18;">${initials}</div>
+      <div class="rank-info">
+        <div class="rank-name">${e.nom}</div>
+        <div class="rank-pilots">${pilotesStr}</div>
+        <div class="pts-breakdown">${ptsByPilot}</div>
+      </div>
+      <div class="rank-pts-wrap">
+        <div class="rank-pts">${e.pts}</div>
+        <div class="rank-pts-label">points</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('classement-ecuries-container').innerHTML = `
+    ${ecuriesHtml}
+    <div class="info" style="margin-top:1rem;">
+      Barème : 1er=25pts · 2e=18pts · 3e=15pts · 4e=12pts · 5e=10pts · 6e=8pts · 7e=6pts · 8e=4pts · 9e=2pts · 10e=1pt
+      ${BONUS_POLE ? ` · Pole=+${BONUS_POLE}pts` : ''} ${BONUS_MTC ? ` · Meilleur tour=+${BONUS_MTC}pts` : ''}
+      — Score écurie = somme des 2 pilotes
+    </div>`;
+
+  // ── Rendu classement pilotes (secondaire) ──
+  const pilotsRows = pilotesData.map((p, i) => {
+    const posCls = p.pos===1?'pos-1':p.pos===2?'pos-2':p.pos===3?'pos-3':'pos-n';
+    const bonusHtml = p.bonuses.map(b => `<span class="badge b-gold" style="font-size:9px;">${b}</span>`).join(' ');
+    return `<tr>
+      <td><span class="pos-badge ${posCls}">${p.pos===99?'—':p.pos}</span></td>
+      <td style="color:var(--text);font-weight:500;">${p.nom} ${bonusHtml}</td>
+      <td style="color:var(--muted);font-size:12px;">${p.ecurie}</td>
+      <td style="font-family:monospace;font-size:11px;">${p.temps}</td>
+      <td style="font-weight:600;color:var(--gold);">${p.pts} pts</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('classement-pilotes-container').innerHTML = `
+    <div style="overflow-x:auto;">
+      <table class="pilots-table">
+        <thead><tr><th>Pos</th><th>Pilote</th><th>Écurie</th><th>Temps</th><th>Points</th></tr></thead>
+        <tbody>${pilotsRows}</tbody>
+      </table>
+    </div>
+    <div class="info">Classement individuel — pour indiquer <strong>Meilleur Tour en Course</strong> : dans l'onglet RESULTATS, mets <code>MTC</code> dans la colonne Note du pilote concerné.</div>`;
+}
+
 function renderResultats(resultats, cfg) {
   if (!resultats.length) {
     document.getElementById('resultats-container').innerHTML = '<p style="color:var(--muted);font-size:13px;">La course n\'a pas encore eu lieu — les résultats apparaîtront ici.</p>';
@@ -822,6 +1026,7 @@ async function loadAll() {
     renderEcuries(DEMO.ecuries);
     renderGrille(DEMO.pilotes);
     renderQualifications(DEMO.qualifications);
+    renderClassements(DEMO.resultats, DEMO.qualifications, DEMO.ecuries);
     renderResultats(DEMO.resultats, DEMO.config);
     renderPrimes(DEMO.config);
     renderReglement(DEMO.reglement);
@@ -843,6 +1048,7 @@ async function loadAll() {
     renderEcuries(ecuriesRows);
     renderGrille(pilotesRows);
     renderQualifications(qualiRows);
+    renderClassements(resultatsRows, qualiRows, ecuriesRows);
     renderResultats(resultatsRows, cfg);
     renderPrimes(cfg);
     renderReglement(reglementRows);
@@ -853,6 +1059,7 @@ async function loadAll() {
     renderEcuries(DEMO.ecuries);
     renderGrille(DEMO.pilotes);
     renderQualifications(DEMO.qualifications);
+    renderClassements(DEMO.resultats, DEMO.qualifications, DEMO.ecuries);
     renderResultats(DEMO.resultats, DEMO.config);
     renderPrimes(DEMO.config);
     renderReglement(DEMO.reglement);
