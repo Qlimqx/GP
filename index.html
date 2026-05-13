@@ -285,7 +285,6 @@
       <a href="#qualifications">Qualifs</a>
       <a href="#classement-ecuries">Écuries</a>
       <a href="#classement-pilotes">Pilotes</a>
-      <a href="#primes">Primes</a>
       <a href="#reglement">Règlement</a>
     </nav>
     <button class="sync-btn" onclick="loadAll(true)">↻ Sync</button>
@@ -384,21 +383,10 @@
     </div>
   </section>
 
-  <!-- ── PRIMES ── -->
-  <section class="section" id="primes">
-    <div class="section-header">
-      <span class="section-num">04</span>
-      <h2 class="section-title">Primes & Dotations</h2>
-    </div>
-    <div id="primes-container">
-      <div class="loading"><div class="spinner"></div> Chargement des primes...</div>
-    </div>
-  </section>
-
   <!-- ── RÈGLEMENT (dynamique depuis Google Sheets) ── -->
   <section class="section" id="reglement">
     <div class="section-header">
-      <span class="section-num">08</span>
+      <span class="section-num">07</span>
       <h2 class="section-title">Règlement</h2>
     </div>
     <div id="reglement-container">
@@ -459,7 +447,6 @@ const DEMO = {
     'Sous_titre':   'Los Santos · Circuit Officiel',
     'Event_label':  'Événement Officiel · San Andreas',
     'Inscription':  '400000',
-    'Caution':      '50000',
     'Prime_1er':    '1000000',
     'Prime_2eme':   '800000',
     'Prime_3eme':   '600000',
@@ -598,12 +585,10 @@ function renderConfig(cfg) {
 
 function renderInscription(cfg) {
   const ins = cleanNum(cfg['Inscription']) || 400000;
-  const cau = cleanNum(cfg['Caution'])     || 50000;
   document.getElementById('inscription-container').innerHTML = `
-    <div class="grid-3" style="margin-bottom:1rem;">
+    <div class="grid-2" style="margin-bottom:1rem;">
       <div class="stat"><div class="stat-label">Frais d'inscription</div><div class="stat-value">${fmt(ins)}</div><div class="stat-sub">par pilote / écurie</div></div>
-      <div class="stat"><div class="stat-label">Caution réglementaire</div><div class="stat-value">${fmt(cau)}</div><div class="stat-sub">remboursable après la course</div></div>
-      <div class="stat"><div class="stat-label">Total à verser</div><div class="stat-value">${fmt(ins+cau)}</div><div class="stat-sub">dont ${fmt(cau)} récupérables</div></div>
+      
     </div>
     <div class="info">L'inscription doit être réglée <strong>avant les qualifications</strong>. Aucun remboursement en cas de forfait ou disqualification.</div>`;
 }
@@ -930,65 +915,6 @@ function renderResultats(resultats, cfg) {
     </div>`;
 }
 
-function renderPrimes(cfg) {
-  const p1  = cleanNum(cfg['Prime_1er'])   || 1000000;
-  const p2  = cleanNum(cfg['Prime_2eme'])  || 800000;
-  const p3  = cleanNum(cfg['Prime_3eme'])  || 600000;
-  const pe  = cleanNum(cfg['Prime_Ecurie'])|| 1500000;
-  const pp  = cleanNum(cfg['Prime_Pole'])  || 100000;
-  const pm  = cleanNum(cfg['Prime_MTC'])   || 100000;
-  const ins = cleanNum(cfg['Inscription']) || 400000;
-  const cau = cleanNum(cfg['Caution'])     || 50000;
-  const nb  = parseInt(document.getElementById('hs-pilotes').textContent) || 8;
-
-  const revTotal = nb * (ins + cau);
-  const depTotal = p1 + p2 + p3 + pe + pp + pm + Math.round(nb * cau * 0.8);
-  const benef    = revTotal - depTotal;
-
-  document.getElementById('primes-container').innerHTML = `
-    <div class="prize-cards">
-      <div class="prize-card prize-1"><div class="prize-icon">🥇</div><div class="prize-place">1ère place</div><div class="prize-amount">${fmt(p1)}</div><div class="prize-desc">Prime pilote</div></div>
-      <div class="prize-card prize-2"><div class="prize-icon">🥈</div><div class="prize-place">2ème place</div><div class="prize-amount">${fmt(p2)}</div><div class="prize-desc">Prime pilote</div></div>
-      <div class="prize-card prize-3"><div class="prize-icon">🥉</div><div class="prize-place">3ème place</div><div class="prize-amount">${fmt(p3)}</div><div class="prize-desc">Prime pilote</div></div>
-      <div class="prize-card prize-ecurie"><div class="prize-icon">🏆</div><div class="prize-place">Meilleure écurie</div><div class="prize-amount">${fmt(pe)}</div><div class="prize-desc">Prix constructeur</div></div>
-    </div>
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-label">Bonus spéciaux</div>
-        <ul class="row-list">
-          <li class="row-item"><span class="row-lbl">⚡ Pole position</span><span class="row-val g">${fmt(pp)}</span></li>
-          <li class="row-item"><span class="row-lbl">⚡ Meilleur tour en course</span><span class="row-val g">${fmt(pm)}</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="pnl-unlock-wrap">
-      <button class="pnl-unlock-btn" onclick="openPnlModal()">🔒 Compte de résultat organisateur — Accès restreint</button>
-    </div>
-    <div id="pnl-section" class="pnl-locked">
-      <p class="sub-title">Compte de résultat organisateur</p>
-      <div class="pnl rev">
-        <div class="pnl-title">▲ Revenus</div>
-        <div class="pnl-item"><span>Inscriptions (${nb} pilotes × ${fmt(ins)})</span><span>${fmt(nb*ins)}</span></div>
-        <div class="pnl-item"><span>Cautions retenues (~20%)</span><span>${fmt(Math.round(nb*cau*0.2))}</span></div>
-        <div class="pnl-total"><span>Total revenus</span><span>${fmt(revTotal)}</span></div>
-      </div>
-      <div class="pnl dep">
-        <div class="pnl-title">▼ Dépenses</div>
-        <div class="pnl-item"><span>Prime 1er ${fmt(p1)} + 2e ${fmt(p2)} + 3e ${fmt(p3)}</span><span>− ${fmt(p1+p2+p3)}</span></div>
-        <div class="pnl-item"><span>Prime écurie</span><span>− ${fmt(pe)}</span></div>
-        <div class="pnl-item"><span>Pole + Meilleur tour</span><span>− ${fmt(pp+pm)}</span></div>
-        <div class="pnl-item"><span>Remboursement cautions (80%)</span><span>− ${fmt(Math.round(nb*cau*0.8))}</span></div>
-        <div class="pnl-total"><span>Total dépenses</span><span>− ${fmt(depTotal)}</span></div>
-      </div>
-      <div class="pnl ben">
-        <div class="pnl-title">★ Bénéfice net organisateur</div>
-        <div class="pnl-item"><span>Revenus</span><span>${fmt(revTotal)}</span></div>
-        <div class="pnl-item"><span>Dépenses</span><span>− ${fmt(depTotal)}</span></div>
-        <div class="pnl-total"><span>Bénéfice net</span><span>~${fmt(benef)}</span></div>
-      </div>
-    </div>`;
-}
 
 // ============================================================
 // MODAL MOT DE PASSE
@@ -1030,7 +956,6 @@ async function loadAll() {
     renderGrille(DEMO.pilotes);
     renderQualifications(DEMO.qualifications);
     renderClassements(DEMO.resultats, DEMO.qualifications, DEMO.ecuries);
-    renderPrimes(DEMO.config);
     renderReglement(DEMO.reglement);
     return;
   }
@@ -1051,7 +976,6 @@ async function loadAll() {
     renderGrille(pilotesRows);
     renderQualifications(qualiRows);
     renderClassements(resultatsRows, qualiRows, ecuriesRows);
-    renderPrimes(cfg);
     renderReglement(reglementRows);
   } catch(err) {
     console.error('[GP] Erreur:', err);
@@ -1061,7 +985,6 @@ async function loadAll() {
     renderGrille(DEMO.pilotes);
     renderQualifications(DEMO.qualifications);
     renderClassements(DEMO.resultats, DEMO.qualifications, DEMO.ecuries);
-    renderPrimes(DEMO.config);
     renderReglement(DEMO.reglement);
   }
 }
