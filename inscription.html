@@ -193,6 +193,46 @@
 
 <script>
 
+
+// ============================================================
+// ★ FOND DE PAGE — Modifie ces 3 lignes ★
+// ============================================================
+const BG_TYPE    = 'none';   // 'none' | 'image' | 'video'
+const BG_URL     = '';        // URL de ton image ou vidéo
+                              // Ex image : 'https://i.imgur.com/xxxx.jpg'
+                              // Ex vidéo : 'https://...mp4' ou fichier local
+const BG_OPACITY = 0.75;     // Voile sombre : 0 = transparent, 1 = noir total
+
+// ── Application automatique du fond ──────────────────────────
+(function applyBackground() {
+  if (BG_TYPE === 'none' || !BG_URL) return;
+
+  // Voile sombre
+  const overlay = document.createElement('div');
+  overlay.className = 'bg-overlay';
+  overlay.style.setProperty('--overlay-opacity', BG_OPACITY);
+  document.body.appendChild(overlay);
+
+  if (BG_TYPE === 'image') {
+    // Image de fond
+    document.body.style.backgroundImage = `url('${BG_URL}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundAttachment = 'fixed';
+
+  } else if (BG_TYPE === 'video') {
+    // Vidéo de fond
+    const vid = document.createElement('video');
+    vid.className = 'bg-media';
+    vid.src = BG_URL;
+    vid.autoplay = true;
+    vid.loop = true;
+    vid.muted = true;
+    vid.playsInline = true;
+    document.body.insertBefore(vid, document.body.firstChild);
+  }
+})();
+
 const SHEET_ID = '1GmOrWSLecNuF5z7VEYo92XUJHBzfQW4Siih6Tj4cZx4';
 const POINTS_GP = {1:25,2:18,3:15,4:12,5:10,6:8,7:6,8:4,9:2,10:1};
 const BONUS_POLE = 3;
