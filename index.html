@@ -196,25 +196,43 @@
 
 
 
+
 // ============================================================
 // ★ FOND DE PAGE — Modifie ces 3 lignes ★
 // ============================================================
 const BG_TYPE    = 'streamable';    // 'none' | 'image' | 'video' | 'streamable' | 'youtube'
-const BG_URL     = 'gdbszz';         // Selon le type :
-                               // image      → 'https://i.imgur.com/xxx.jpg'
-                               // video      → 'https://exemple.com/video.mp4'
-                               // streamable → 'gdbszz'  (juste le code ex: streamable.com/GDBSZZ)
-                               // youtube    → 'dQw4w9WgXcQ' (juste l'ID de la vidéo)
-const BG_OPACITY = 0.75;      // Voile sombre : 0.3 = léger · 0.75 = normal · 0.92 = très sombre
+const BG_URL     = 'gdbszz';         // image → URL .jpg  |  video → URL .mp4
+                               // streamable → code ex: 'gdbszz'
+                               // youtube    → ID ex: 'U2_vT7sgv_c'
+const BG_OPACITY = 0.75;      // Voile sombre : 0.3=léger · 0.75=normal · 0.92=très sombre
 
-// ── Application automatique ───────────────────────────────────
 (function applyBackground() {
   if (BG_TYPE === 'none' || !BG_URL) return;
 
-  // Voile sombre
+  // Style commun pour tout fond plein écran
+  const fullStyle = `
+    position:fixed;
+    top:50%;
+    left:50%;
+    min-width:100vw;
+    min-height:100vh;
+    width:177.78vh;
+    height:56.25vw;
+    transform:translate(-50%,-50%);
+    z-index:-2;
+    pointer-events:none;
+    border:none;
+    object-fit:cover;
+  `;
+
+  // Voile sombre par dessus
   const overlay = document.createElement('div');
-  overlay.className = 'bg-overlay';
-  overlay.style.setProperty('--overlay-opacity', BG_OPACITY);
+  overlay.style.cssText = `
+    position:fixed;top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,${BG_OPACITY});
+    z-index:-1;pointer-events:none;
+  `;
   document.body.appendChild(overlay);
 
   if (BG_TYPE === 'image') {
@@ -224,9 +242,8 @@ const BG_OPACITY = 0.75;      // Voile sombre : 0.3 = léger · 0.75 = normal ·
     document.body.style.backgroundAttachment = 'fixed';
 
   } else if (BG_TYPE === 'video') {
-    // Vidéo MP4 directe
     const vid = document.createElement('video');
-    vid.className = 'bg-media';
+    vid.style.cssText = fullStyle;
     vid.src = BG_URL;
     vid.autoplay = true;
     vid.loop = true;
@@ -235,27 +252,22 @@ const BG_OPACITY = 0.75;      // Voile sombre : 0.3 = léger · 0.75 = normal ·
     document.body.insertBefore(vid, document.body.firstChild);
 
   } else if (BG_TYPE === 'streamable') {
-    // Streamable — entre juste le code (ex: 'gdbszz' pour streamable.com/gdbszz)
     const iframe = document.createElement('iframe');
-    iframe.className = 'bg-media';
-    iframe.src = `https://streamable.com/e/${BG_URL}?autoplay=1&loop=1&muted=1&nocontrols=1`;
-    iframe.frameBorder = '0';
-    iframe.allow = 'autoplay';
+    iframe.style.cssText = fullStyle;
+    iframe.src = `https://streamable.com/e/${BG_URL}?autoplay=1&loop=1&muted=1&nocontrols=1&background=1`;
+    iframe.allow = 'autoplay; fullscreen';
     iframe.setAttribute('allowfullscreen', '');
-    iframe.style.pointerEvents = 'none';
     document.body.insertBefore(iframe, document.body.firstChild);
 
   } else if (BG_TYPE === 'youtube') {
-    // YouTube — entre juste l'ID de la vidéo
     const iframe = document.createElement('iframe');
-    iframe.className = 'bg-media';
-    iframe.src = `https://www.youtube.com/embed/${BG_URL}?autoplay=1&loop=1&playlist=${BG_URL}&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1`;
-    iframe.frameBorder = '0';
-    iframe.allow = 'autoplay';
-    iframe.style.pointerEvents = 'none';
+    iframe.style.cssText = fullStyle;
+    iframe.src = `https://www.youtube.com/embed/${BG_URL}?autoplay=1&loop=1&playlist=${BG_URL}&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3`;
+    iframe.allow = 'autoplay; fullscreen';
     document.body.insertBefore(iframe, document.body.firstChild);
   }
 })();
+
 
 
 const SHEET_ID = '1GmOrWSLecNuF5z7VEYo92XUJHBzfQW4Siih6Tj4cZx4';
