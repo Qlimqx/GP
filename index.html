@@ -255,15 +255,14 @@ const BG_OPACITY = 0.75;      // Voile sombre : 0.3=léger · 0.75=normal · 0.9
     const iframe = document.createElement('iframe');
     iframe.style.cssText = fullStyle;
     iframe.src = `https://streamable.com/e/${BG_URL}?autoplay=1&loop=1&muted=1&nocontrols=1&background=1`;
-    iframe.allow = 'autoplay; fullscreen';
-    iframe.setAttribute('allowfullscreen', '');
-    document.body.insertBefore(iframe, document.body.firstChild);
+    iframe.allow = 'autoplay';
+        document.body.insertBefore(iframe, document.body.firstChild);
 
   } else if (BG_TYPE === 'youtube') {
     const iframe = document.createElement('iframe');
     iframe.style.cssText = fullStyle;
     iframe.src = `https://www.youtube.com/embed/${BG_URL}?autoplay=1&loop=1&playlist=${BG_URL}&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3`;
-    iframe.allow = 'autoplay; fullscreen';
+    iframe.allow = 'autoplay';
     document.body.insertBefore(iframe, document.body.firstChild);
   }
 })();
