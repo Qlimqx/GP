@@ -200,8 +200,8 @@
 // ============================================================
 // ★ FOND DE PAGE — Modifie ces 3 lignes ★
 // ============================================================
-const BG_TYPE    = 'none';    // 'none' | 'image' | 'video' | 'streamable' | 'youtube'
-const BG_URL     = '';         // image → URL .jpg  |  video → URL .mp4
+const BG_TYPE    = 'video';    // 'none' | 'image' | 'video' | 'streamable' | 'youtube'
+const BG_URL     = 'f1.mp4';         // image → URL .jpg  |  video → URL .mp4
                                // streamable → code ex: 'gdbszz'
                                // youtube    → ID ex: 'U2_vT7sgv_c'
 const BG_OPACITY = 0.75;      // Voile sombre : 0.3=léger · 0.75=normal · 0.92=très sombre
@@ -244,18 +244,28 @@ const BG_OPACITY = 0.75;      // Voile sombre : 0.3=léger · 0.75=normal · 0.9
   } else if (BG_TYPE === 'video') {
     const vid = document.createElement('video');
     vid.style.cssText = fullStyle;
+    // Autoplay — tous les attributs nécessaires pour Chrome/Safari
     vid.setAttribute('autoplay', '');
     vid.setAttribute('loop', '');
     vid.setAttribute('muted', '');
     vid.setAttribute('playsinline', '');
-    vid.muted = true; // nécessaire pour Chrome
+    vid.autoplay   = true;
+    vid.loop       = true;
+    vid.muted      = true;
+    vid.defaultMuted = true;
+    vid.playsInline = true;
     const source = document.createElement('source');
-    source.src = BG_URL;
+    source.src  = BG_URL;
     source.type = 'video/mp4';
     vid.appendChild(source);
     document.body.insertBefore(vid, document.body.firstChild);
-    // Force la lecture après chargement
-    vid.addEventListener('canplay', () => { vid.play().catch(()=>{}); });
+    // Plusieurs méthodes pour forcer la lecture
+    const tryPlay = () => vid.play().catch(() => {});
+    vid.addEventListener('loadedmetadata', tryPlay);
+    vid.addEventListener('canplay',        tryPlay);
+    vid.addEventListener('canplaythrough', tryPlay);
+    setTimeout(tryPlay, 500);
+    setTimeout(tryPlay, 1500);
     vid.load();
 
   } else if (BG_TYPE === 'streamable') {
