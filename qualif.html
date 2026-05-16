@@ -139,12 +139,7 @@
 </style>
 </head>
 <body>
-
-
-<!-- Écran d'accueil -->
-<div id="splash">
-  <div class="splash-line"></div>
-  <div class="splash-logo">Grand Prix<br>San Andreas</div>
+<div class="splash-logo">Grand Prix<br>San Andreas</div>
   <div class="splash-sub">Fédération officielle RP · GTA</div>
   <button class="splash-btn" onclick="enterSite()">▶ Entrer</button>
   <div class="splash-line"></div>
@@ -366,19 +361,4 @@ function renderQualif(quals){
       <td style="color:var(--muted);font-size:12px;">${ecurie}</td>
       <td style="font-family:monospace;font-size:11px;color:var(--muted);">${q1}</td>
       <td style="font-family:monospace;font-size:11px;color:var(--muted);">${q2}</td>
-      <td style="font-family:monospace;font-size:11px;color:var(--muted);">${q3}</td>
-      <td style="font-family:monospace;font-weight:700;color:var(--gold);font-size:12px;">${best}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('quali-container').innerHTML=`
-    <div style="overflow-x:auto;"><table class="data-table">
-      <thead><tr><th>Grille</th><th>Pilote</th><th>Écurie</th><th>Q1</th><th>Q2</th><th>Q3</th><th style="color:var(--gold)">Meilleur</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table></div>
-    <div class="info"><strong>Q1</strong> = tous les pilotes · <strong>Q2</strong> = top 10 · <strong>Q3</strong> = top 6 (pole position). Pour indiquer la pole, mettre <strong>POLE</strong> dans la colonne Note.</div>`;
-}
-
-window.addEventListener('DOMContentLoaded', ()=>loadAll());
-</script>
-</body>
-</html>
+      <
