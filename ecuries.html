@@ -328,7 +328,7 @@ function showLoading(id){document.getElementById(id).innerHTML='<div class="load
 function showEmpty(id,icon,msg){document.getElementById(id).innerHTML=`<div class="empty-state"><div class="empty-icon">${icon}</div><p>${msg}</p></div>`;}
 
 
-const TABS = {ecuries:{name:'ECURIES',range:'A3:F100'}};
+const TABS = {ecuries:{name:'ECURIES',range:'A3:G100'}};
 async function loadAll(){
   try{
     const rows=await fetchSheet(TABS.ecuries);
@@ -344,6 +344,7 @@ function renderEcuries(ecuries){
     const p2=e['Pilote2']||e['pilote2']||'';
     const color=e['Couleur']||e['couleur']||'#F0A500';
     const sponsor=e['Sponsor']||e['sponsor']||'';
+    const meca=e['Mecanicien']||e['mecanicien']||e['Mechano']||e['mechano']||sponsor||'';
     const statut=e['Statut']||e['statut']||'';
     const initials=nom.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
     const pilotes=[p1,p2].filter(Boolean);
@@ -353,7 +354,7 @@ function renderEcuries(ecuries){
         <div class="ecurie-name" style="color:${color};">${nom}</div>
         <div class="ecurie-detail">
           ${pilotes.length?`<span>🏎 ${pilotes.join(' · ')}</span>`:'<span>Pilotes à confirmer</span>'}
-          ${sponsor?`<span style="color:var(--gold)">◆ ${sponsor}</span>`:''}
+          ${meca?`<span>🔧 ${meca}</span>`:''}
           ${statusBadge(statut)}
         </div>
       </div>
