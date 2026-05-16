@@ -11,7 +11,7 @@
     :root{--gold:#F0A500;--gold-dim:rgba(240,165,0,0.12);--gold-border:rgba(240,165,0,0.35);--bg:#080808;--surface:#111111;--surface2:#181818;--border:rgba(255,255,255,0.07);--text:#f0f0f0;--muted:#888;--dim:#444;--green:#2ecc71;--red:#e74c3c;--silver:#C0C0C0;--bronze:#cd7f32;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
-    body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.7;min-height:100vh;}
+    body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);font-size:17px;line-height:1.75;min-height:100vh;}
     ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
     a{color:var(--gold);text-decoration:none;}
 
@@ -20,58 +20,58 @@
     .header-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;gap:1.5rem;height:60px;}
     .logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
     .logo-badge{width:34px;height:34px;border-radius:6px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:10px;color:#1a0e00;line-height:1.1;text-align:center;}
-    .logo-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;color:var(--text);}
-    .logo-sub{font-size:10px;color:var(--muted);}
+    .logo-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;letter-spacing:1px;color:var(--text);}
+    .logo-sub{font-size:12px;color:var(--muted);}
     nav{display:flex;gap:2px;overflow-x:auto;flex:1;justify-content:flex-end;}
     nav::-webkit-scrollbar{display:none;}
-    nav a{font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);padding:5px 10px;border-radius:4px;white-space:nowrap;transition:color 0.2s,background 0.2s;text-decoration:none;}
+    nav a{font-size:13px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);padding:5px 10px;border-radius:4px;white-space:nowrap;transition:color 0.2s,background 0.2s;text-decoration:none;}
     nav a:hover{color:var(--gold);background:var(--gold-dim);}
     nav a.active{color:var(--gold);background:var(--gold-dim);border-bottom:2px solid var(--gold);}
-    .sync-btn{background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold);font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;padding:5px 12px;border-radius:5px;cursor:pointer;transition:background 0.2s;white-space:nowrap;flex-shrink:0;}
+    .sync-btn{background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold);font-size:13px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;padding:5px 12px;border-radius:5px;cursor:pointer;transition:background 0.2s;white-space:nowrap;flex-shrink:0;}
     .sync-btn:hover{background:rgba(240,165,0,0.22);}
 
     /* HERO */
     .hero{position:relative;overflow:hidden;padding:3.5rem 1.5rem 3rem;text-align:center;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(240,165,0,0.08) 0%,transparent 65%);}
     .hero::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100px;height:2px;background:var(--gold);}
-    .hero-badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-border);padding:3px 14px;border-radius:20px;margin-bottom:1rem;}
+    .hero-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-border);padding:3px 14px;border-radius:20px;margin-bottom:1rem;}
     .hero h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2.5rem,8vw,5rem);letter-spacing:2px;text-transform:uppercase;line-height:1;margin-bottom:0.4rem;background:linear-gradient(180deg,#fff 20%,#777 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .hero h1 span{background:linear-gradient(135deg,var(--gold) 0%,#ffe066 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .hero-sub{font-size:0.85rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+    .hero-sub{font-size:1rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
 
     /* LAYOUT */
     main{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
     .section{margin-bottom:3.5rem;}
     .section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);position:relative;}
     .section-header::before{content:'';position:absolute;bottom:-1px;left:0;width:50px;height:2px;background:var(--gold);}
-    .section-num{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;color:var(--gold);letter-spacing:2px;text-transform:uppercase;opacity:0.6;}
-    .section-title{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+    .section-num{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:var(--gold);letter-spacing:2px;text-transform:uppercase;opacity:0.6;}
+    .section-title{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
     .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
     .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;}
     .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;transition:border-color 0.2s;}
     .card:hover{border-color:var(--gold-border);}
-    .card-label{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-bottom:0.75rem;}
+    .card-label{font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-bottom:0.75rem;}
     .stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;}
-    .stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
-    .stat-value{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:700;color:var(--gold);line-height:1;}
+    .stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+    .stat-value{font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:700;color:var(--gold);line-height:1;}
     .stat-sub{font-size:11px;color:var(--dim);margin-top:3px;}
     .row-list{list-style:none;}
-    .row-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);gap:1rem;font-size:13px;}
+    .row-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:1rem;font-size:15px;}
     .row-item:last-child{border-bottom:none;padding-bottom:0;}
     .row-lbl{color:var(--muted);}
     .row-val{font-weight:600;color:var(--text);white-space:nowrap;}
     .row-val.g{color:var(--green);}
-    .badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;padding:2px 8px;border-radius:4px;}
+    .badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;padding:2px 8px;border-radius:4px;}
     .b-gold{background:var(--gold-dim);color:var(--gold);}
     .b-green{background:rgba(46,204,113,0.1);color:var(--green);}
     .b-blue{background:rgba(59,139,250,0.1);color:#5ba5ff;}
     .b-red{background:rgba(231,76,60,0.1);color:var(--red);}
-    .info{font-size:12px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;margin-top:0.875rem;line-height:1.6;}
+    .info{font-size:14px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 13px;margin-top:0.875rem;line-height:1.6;}
     .info strong{color:var(--gold);}
     .highlight{background:rgba(240,165,0,0.04);border:1.5px solid var(--gold-border);border-radius:10px;padding:1rem 1.4rem;margin-bottom:1.5rem;}
     .highlight-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
-    .highlight-body{font-size:13px;color:var(--muted);line-height:1.7;}
+    .highlight-body{font-size:15px;color:var(--muted);line-height:1.7;}
     .highlight-body strong{color:var(--text);}
-    .rule{padding:0.875rem 1.1rem 0.875rem 1.25rem;border-left:2px solid var(--gold);background:var(--surface);border-radius:0 8px 8px 0;margin-bottom:8px;font-size:13px;line-height:1.7;color:var(--muted);}
+    .rule{padding:1rem 1.25rem 1rem 1.5rem;border-left:2px solid var(--gold);background:var(--surface);border-radius:0 8px 8px 0;margin-bottom:10px;font-size:15px;line-height:1.7;color:var(--muted);}
     .rule strong{color:var(--text);}
 
     /* CLASSEMENT ECURIES */
@@ -89,13 +89,13 @@
     .rank-other .rank-num{color:var(--dim);}
     .rank-badge{width:40px;height:40px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;flex-shrink:0;}
     .rank-info{flex:1;}
-    .rank-name{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:3px;}
-    .rank-pilots{font-size:11px;color:var(--muted);}
+    .rank-name{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:3px;}
+    .rank-pilots{font-size:13px;color:var(--muted);}
     .pts-breakdown{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;}
-    .pts-chip{font-size:10px;padding:1px 6px;border-radius:3px;background:var(--surface2);color:var(--muted);}
+    .pts-chip{font-size:12px;padding:1px 6px;border-radius:3px;background:var(--surface2);color:var(--muted);}
     .pts-chip.bonus{background:rgba(240,165,0,0.1);color:var(--gold);}
     .rank-pts-wrap{text-align:right;flex-shrink:0;}
-    .rank-pts{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:900;line-height:1;}
+    .rank-pts{font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:900;line-height:1;}
     .rank-1 .rank-pts{color:var(--gold);}
     .rank-2 .rank-pts{color:var(--silver);}
     .rank-3 .rank-pts{color:var(--bronze);}
@@ -103,9 +103,9 @@
     .rank-pts-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
 
     /* TABLES */
-    .data-table{width:100%;border-collapse:collapse;font-size:13px;}
-    .data-table th{text-align:left;padding:8px 10px;font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border);white-space:nowrap;}
-    .data-table td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--muted);}
+    .data-table{width:100%;border-collapse:collapse;font-size:15px;}
+    .data-table th{text-align:left;padding:10px 12px;font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border);white-space:nowrap;}
+    .data-table td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--muted);}
     .data-table tr:last-child td{border-bottom:none;}
     .data-table tr:hover td{background:var(--surface2);}
     .pos-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-weight:700;font-size:11px;}
@@ -119,8 +119,8 @@
     .ecurie-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:center;gap:0.875rem;transition:border-color 0.2s,transform 0.15s;}
     .ecurie-card:hover{border-color:var(--gold-border);transform:translateY(-2px);}
     .ecurie-initials{width:40px;height:40px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;flex-shrink:0;}
-    .ecurie-name{font-weight:600;font-size:14px;margin-bottom:3px;}
-    .ecurie-detail{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+    .ecurie-name{font-weight:600;font-size:16px;margin-bottom:3px;}
+    .ecurie-detail{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
 
     /* LOADING */
     .loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;padding:1.5rem 0;}
@@ -128,17 +128,27 @@
     @keyframes spin{to{transform:rotate(360deg);}}
     .empty-state{text-align:center;padding:3rem 1rem;color:var(--muted);}
     .empty-state .empty-icon{font-size:2.5rem;margin-bottom:0.75rem;}
-    .empty-state p{font-size:14px;}
+    .empty-state p{font-size:16px;}
 
     /* FOOTER */
     footer{background:var(--surface);border-top:1px solid var(--border);text-align:center;padding:1.75rem 1.5rem;}
     .footer-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:900;letter-spacing:3px;color:var(--gold);margin-bottom:4px;}
-    .footer-sub{font-size:11px;color:var(--dim);letter-spacing:1px;}
+    .footer-sub{font-size:13px;color:var(--dim);letter-spacing:1px;}
 
-    @media(max-width:640px){.hero{padding:2.5rem 1rem 2rem;}main{padding:2rem 1rem 4rem;}.header-inner{gap:0.75rem;}nav a{font-size:10px;padding:4px 7px;}}
+    @media(max-width:640px){.hero{padding:2.5rem 1rem 2rem;}main{padding:2rem 1rem 4rem;}.header-inner{gap:0.75rem;}nav a{font-size:12px;padding:4px 7px;}}
 </style>
 </head>
 <body>
+
+
+<!-- Écran d'accueil -->
+<div id="splash">
+  <div class="splash-line"></div>
+  <div class="splash-logo">Grand Prix<br>San Andreas</div>
+  <div class="splash-sub">Fédération officielle RP · GTA</div>
+  <button class="splash-btn" onclick="enterSite()">▶ Entrer</button>
+  <div class="splash-line"></div>
+</div>
 
 <header>
   <div class="header-inner">
@@ -199,8 +209,8 @@
 // ============================================================
 // ★ FOND DE PAGE — Modifie ces 3 lignes ★
 // ============================================================
-const BG_TYPE    = 'video';    // 'none' | 'image' | 'video' | 'streamable' | 'youtube'
-const BG_URL     = 'f1.mp4';         // image → URL .jpg  |  video → URL .mp4
+const BG_TYPE    = 'none';    // 'none' | 'image' | 'video' | 'streamable' | 'youtube'
+const BG_URL     = '';         // image → URL .jpg  |  video → URL .mp4
                                // streamable → code ex: 'gdbszz'
                                // youtube    → ID ex: 'U2_vT7sgv_c'
 const BG_OPACITY = 0.75;      // Voile sombre : 0.3=léger · 0.75=normal · 0.92=très sombre
@@ -243,18 +253,28 @@ const BG_OPACITY = 0.75;      // Voile sombre : 0.3=léger · 0.75=normal · 0.9
   } else if (BG_TYPE === 'video') {
     const vid = document.createElement('video');
     vid.style.cssText = fullStyle;
+    // Autoplay — tous les attributs nécessaires pour Chrome/Safari
     vid.setAttribute('autoplay', '');
     vid.setAttribute('loop', '');
     vid.setAttribute('muted', '');
     vid.setAttribute('playsinline', '');
-    vid.muted = true; // nécessaire pour Chrome
+    vid.autoplay   = true;
+    vid.loop       = true;
+    vid.muted      = true;
+    vid.defaultMuted = true;
+    vid.playsInline = true;
     const source = document.createElement('source');
-    source.src = BG_URL;
+    source.src  = BG_URL;
     source.type = 'video/mp4';
     vid.appendChild(source);
     document.body.insertBefore(vid, document.body.firstChild);
-    // Force la lecture après chargement
-    vid.addEventListener('canplay', () => { vid.play().catch(()=>{}); });
+    // Plusieurs méthodes pour forcer la lecture
+    const tryPlay = () => vid.play().catch(() => {});
+    vid.addEventListener('loadedmetadata', tryPlay);
+    vid.addEventListener('canplay',        tryPlay);
+    vid.addEventListener('canplaythrough', tryPlay);
+    setTimeout(tryPlay, 500);
+    setTimeout(tryPlay, 1500);
     vid.load();
 
   } else if (BG_TYPE === 'streamable') {
