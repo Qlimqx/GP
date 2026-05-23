@@ -175,24 +175,44 @@ function parseGvizCell(cell) {
 }
 
 async function fetchSheet(tab) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tab.name)}&range=${tab.range}&headers=1`;
+  // headers=0 : on récupère TOUTES les lignes et on lit les headers manuellement
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tab.name)}&range=${tab.range}&headers=0`;
   const res = await fetch(url, {credentials:'omit'});
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const text = await res.text();
-  if (text.includes('<!DOCTYPE')) throw new Error('Got HTML');
+  if (text.includes('<!DOCTYPE')) throw new Error('Sheet inaccessible — vérifie le partage');
   const clean = text.replace(/^[\s\S]*?setResponse\(/,'').replace(/\);\s*$/,'');
   const json = JSON.parse(clean);
   if (!json.table) throw new Error('No table');
-  const cols = json.table.cols.map(c => (c.label || c.id || '').trim());
-  return (json.table.rows || []).map(row => {
+
+  const allRows = json.table.rows || [];
+  if (allRows.length < 2) return [];
+
+  // Ligne 0 = headers (noms des colonnes)
+  const headerRow = allRows[0].c || [];
+  const cols = headerRow.map((cell, i) => {
+    const v = parseGvizCell(cell).trim();
+    return v || ('col' + i);
+  });
+
+  console.log('Colonnes détectées:', cols); // debug
+
+  // Lignes 1+ = données
+  return allRows.slice(1).map(row => {
     const obj = {};
     (row.c || []).forEach((cell, i) => {
-      obj[cols[i] || 'col'+i] = parseGvizCell(cell); // ← FIX ICI
+      obj[cols[i] || 'col'+i] = parseGvizCell(cell);
     });
     return obj;
   }).filter(r => {
     const f = Object.values(r)[0] || '';
-    return f.trim() && !f.startsWith('──') && !f.startsWith('🏎') && !f.startsWith('📊') && !f.startsWith('Remplis');
+    return f.trim()
+      && !f.startsWith('──')
+      && !f.startsWith('🏎')
+      && !f.startsWith('📊')
+      && !f.startsWith('📋')
+      && !f.startsWith('Remplis')
+      && !f.startsWith('Entre');
   });
 }
 
@@ -200,7 +220,7 @@ function showEmpty(id, icon, msg) {
   document.getElementById(id).innerHTML = `<div class="empty-state"><div class="empty-icon">${icon}</div><p>${msg}</p></div>`;
 }
 
-const TABS = { qualif: {name:'QUALIFICATIONS', range:'A4:H100'} };
+const TABS = { qualif: {name:'QUALIFICATIONS', range:'A3:H100'} };
 
 async function loadAll() {
   try {
@@ -212,17 +232,35 @@ async function loadAll() {
   }
 }
 
+function getCol(q, ...keys) {
+  for (const k of keys) {
+    const val = q[k] || q[k.toLowerCase()] || q[k.toUpperCase()];
+    if (val !== undefined && val !== '') return val;
+    // Recherche insensible à la casse
+    const found = Object.keys(q).find(key => key.trim().toLowerCase() === k.trim().toLowerCase());
+    if (found && q[found] !== '') return q[found];
+  }
+  return '';
+}
+
 function renderQualif(quals) {
-  const valid = quals.filter(q => (q['Pos. Grille'] || q['Pilote'] || '').trim());
+  console.log('Données reçues:', quals.length, 'lignes', quals[0]); // debug
+  const valid = quals.filter(q => {
+    const pos = getCol(q,'Pos. Grille','pos. grille','Position','position');
+    const nom = getCol(q,'Pilote','pilote','Nom','nom');
+    return (pos || nom).trim();
+  });
   if (!valid.length) { showEmpty('quali-container','⏱️','Les qualifications n\'ont pas encore eu lieu.'); return; }
 
   const rows = valid.map((q, i) => {
-    const pos    = q['Pos. Grille'] || q['pos. grille'] || `${i+1}`;
-    const nom    = q['Pilote'] || q['pilote'] || '—';
-    const ecurie = q['Ecurie'] || q['ecurie'] || '—';
-    const q1     = q['Q1'] || q['q1'] || '';
-    const best   = q['Meilleur Temps'] || q['meilleur temps'] || q1 || '';
-    const note   = q['Note'] || q['note'] || '';
+    const pos    = getCol(q,'Pos. Grille','pos. grille') || `${i+1}`;
+    const nom    = getCol(q,'Pilote','pilote') || '—';
+    const ecurie = getCol(q,'Ecurie','ecurie') || '—';
+    const q1     = getCol(q,'Q1','q1');
+    const q2     = getCol(q,'Q2','q2');
+    const q3     = getCol(q,'Q3','q3');
+    const best   = getCol(q,'Meilleur Temps','meilleur temps','Meilleur_Temps') || q1 || '';
+    const note   = getCol(q,'Note','note');
     const p      = parseInt(pos);
     const posCls = p===1?'pos-1':p===2?'pos-2':p===3?'pos-3':'pos-n';
     const isPole = note.toUpperCase().includes('POLE') || p===1;
@@ -246,7 +284,7 @@ function renderQualif(quals) {
       </tr></thead>
       <tbody>${rows}</tbody>
     </table></div>
-    <div class="info"><strong>Q1</strong> = tous les pilotes · <strong>Q2</strong> = top 10 · <strong>Q3</strong> = top 6 (pole position). Pour indiquer la pole, mettre <strong>POLE</strong> dans la colonne Note.</div>`;
+    <div class="info"><strong>Q1</strong> = tous les pilotes · <strong>Q2</strong> = top 10 · <strong>Q3</strong> = top 6 (pole position).</div>`;
 }
 
 window.addEventListener('DOMContentLoaded', () => loadAll());
