@@ -288,8 +288,7 @@ const BG_OPACITY = 0.75;      // Voile sombre : 0.3=léger · 0.75=normal · 0.9
 
 const SHEET_ID = '1GmOrWSLecNuF5z7VEYo92XUJHBzfQW4Siih6Tj4cZx4';
 const POINTS_GP = {1:25,2:18,3:15,4:12,5:10,6:8,7:6,8:4,9:2,10:1};
-const BONUS_POLE = 3;
-const BONUS_MTC  = 2;
+
 
 function fmt(n){
   if(!n&&n!==0)return'—';
@@ -420,7 +419,7 @@ function renderClassements(resultats, qualifications, ecuries){
     </div>`;
   }).join('');
   document.getElementById('classement-ecuries-container').innerHTML = ecuriesHtml +
-  `<div class="info">Barème : 1er=25 · 2e=20 · 3e=16 · 4e=13 · 5e=11 · 6e=10 · 7e=9 · 8e=8 · 9e=7 · 10e=6 · 11e=5 · 12e=4 · 13e=3 · 14e=2 · 15e=1 · 16e-18e=0 · Pole=+${BONUS_POLE}pts · MTC=+${BONUS_MTC}pts</div>`;
+  `<div class="info">Barème : 1er=25 · 2e=20 · 3e=16 · 4e=13 · 5e=11 · 6e=10 · 7e=9 · 8e=8 · 9e=7 · 10e=6 · 11e=5 · 12e=4 · 13e=3 · 14e=2 · 15e=1 · 16e-18e=0 ·</div>`;
 
   const pilotsRows=pilotesData.map((p,i)=>{
     const posCls=p.pos===1?'pos-1':p.pos===2?'pos-2':p.pos===3?'pos-3':'pos-n';
