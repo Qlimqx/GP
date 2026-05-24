@@ -861,7 +861,7 @@ function renderClassements(resultats, qualifications, ecuries){
     </div>`;
   }).join('');
   document.getElementById('classement-ecuries-container').innerHTML = ecuriesHtml +
-  `<div class="info">Barème : 1er=25 · 2e=20 · 3e=16 · 4e=13 · 5e=11 · 6e=10 · 7e=9 · 8e=8 · 9e=7 · 10e=6 · 11e=5 · 12e=4 · 13e=3 · 14e=2 · 15e=1 · 16e-18e=0 · Pole=+${BONUS_POLE}pts · MTC=+${BONUS_MTC}pts</div>`;
+  `<div class="info">Barème : 1er=25 · 2e=20 · 3e=16 · 4e=13 · 5e=11 · 6e=10 · 7e=9 · 8e=8 · 9e=7 · 10e=6 · 11e=5 · 12e=4 · 13e=3 · 14e=2 · 15e=1 · 16e-18e=0 ·</div>`;
 
   const pilotsRows=pilotesData.map((p,i)=>{
     const posCls=p.pos===1?'pos-1':p.pos===2?'pos-2':p.pos===3?'pos-3':'pos-n';
